@@ -2,26 +2,7 @@
   (:gen-class)
   (:require [clojure.walk :as walk]
             [com.rpl.specter :refer :all ]
-            [clojure.data.generators :as gen])
-  )
-
-;; Schemas are defined as nested trees of records (maps), arrays (vecs), basic primitives (int, long, string, date, etc...)
-
-;; Desired output would be json/avro equiv of {"foo": [1 2 3 4]}
-(def simple-schema
-  {:type :record
-   :name "foo"
-   :value {:type :array
-           :value {:type :int}}})
-
-;; {"bar" : [{"baz" : 1} {"baz" : 2} {"baz" : 3}]}
-(def nested-schema
-  {:type :record
-   :name "bar"
-   :value {:type :array
-           :value {:type :record
-                   :name "baz"
-                   :value {:type :int}}}})
+            [clojure.data.generators :as gen]))
 
 (defn clamp [n max & {:keys [min] :or {min 0}}]
   (let [modspace (- max min)]

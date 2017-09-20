@@ -4,20 +4,19 @@
             [clojure.data.generators :refer [*rnd*]])
   (:import java.util.Random))
 
-;; (def simple-schema
-;;   {:type :record
-;;    :name "foo"
-;;    :value {:type :array
-;;            :value {:type :int}}})
+(def simple-schema
+  {:type :record
+   :name "foo"
+   :value {:type :array
+           :value {:type :int}}})
 
-;; (def nested-schema
-;;   {:type :record
-;;    :name "bar"
-;;    :value {:type :array
-;;            :value {:type :record
-;;                    :name "baz"
-;;                    :value {:type :int}}}})
-
+(def nested-schema
+  {:type :record
+   :name "bar"
+   :value {:type :array
+           :value {:type :record
+                   :name "baz"
+                   :value {:type :int}}}})
 
 (deftest a-test
   (testing "Ensure simple-schema and nested-schema work"
