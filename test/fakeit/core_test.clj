@@ -33,12 +33,22 @@
    :name "string"
    :value {:type :string}})
 
-
 (defmacro is-fixed-rnd
+  "Helper macro to fix RNG generator before each assertion."
   ([form] `(binding [*rnd* (Random. 10)]
             (is ~form)))
   ([form msg] `(binding [*rnd* (Random. 10)]
                     (is ~form ~msg))))
+
+(deftest clamp-tests
+  (testing "Make sure custom clamp function works."
+    (are [x floor ceiling] (<= floor (clamp x ceiling :min floor) ceiling)
+      10 20 30
+      20 10 30
+      100 10 30
+      12.3333 5 8)))
+
+
 
 (deftest basic-test
   (testing "Ensure simple-schema and nested-schema work"
