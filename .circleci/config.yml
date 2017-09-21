@@ -41,7 +41,7 @@ jobs:
       # run tests!
       - run: lein with-profile qa cloverage --coveralls -o target/coverage
       # coveralls fix
-      - run: sed -i target/coverage/coveralls.json -E "s/\{[^[]+/{\"repo_token\":\"$COVERALLS_REPO_TOKEN\",\"source_files\":"
+      - run: sed -i 'target/coverage/coveralls.json' -E "s/\{[^[]+/{\"repo_token\":\"$COVERALLS_REPO_TOKEN\",\"source_files\":"
       - run: curl -F 'json_file=@target/coverage/coveralls.json' 'https://coveralls.io/api/v1/jobs'
       - run: rm target/coverage/coveralls.json
       - store_artifacts:
