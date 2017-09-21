@@ -39,10 +39,9 @@ jobs:
           key: v1-dependencies-{{ checksum "project.clj" }}
         
       # run tests!
-      - run: lein with-profile qa cloverage --coveralls -o target/coverage
-      # coveralls fix
-      - run: sed  -E 's@\{[^[]+@{\"repo_token\":'"\"$COVERALLS_REPO_TOKEN\""',\"source_files\":@' 'target/coverage/coveralls.json' > /tmp/coveralls.json
-      - run: curl -F 'json_file=@/tmp/coveralls.json' 'https://coveralls.io/api/v1/jobs'
+      - run:
+          lein with-profile qa cloverage --codecov -o target/coverage
+      - run: bash <(curl -s https://codecov.io/bash) -f target/coverage/codecov.json
       - store_artifacts:
           path: target/coverage/
 
