@@ -40,4 +40,6 @@ jobs:
         
       # run tests!
       - run: lein with-profile qa cloverage --coveralls -o target/coverage
+      - store_artifacts:
+          path: target/coverage/
       - run: curl --silent --show-error --fail -F 'json_file=@target/coverage/coveralls.json' 'https://coveralls.io/api/v1/jobs'
