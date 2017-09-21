@@ -1,5 +1,7 @@
 # fakeit
 
+[![CircleCI](https://circleci.com/gh/Kyo91/fakeit.svg?style=svg)](https://circleci.com/gh/Kyo91/fakeit) [![Coverage Status](https://coveralls.io/repos/github/Kyo91/fakeit/badge.svg?branch=master)](https://coveralls.io/github/Kyo91/fakeit?branch=master)
+
 A data generation library written in clojure.
 
 ## Installation
