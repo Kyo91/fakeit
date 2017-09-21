@@ -10,4 +10,5 @@
                  [org.clojure/data.generators "0.1.2"]]
   :main ^:skip-aot fakeit.core
   :target-path "target/%s"
-  :profiles {:uberjar {:aot :all}})
+  :profiles {:uberjar {:aot :all}
+             :qa {:plugins [[lein-cloverage "1.0.6"]]}})
