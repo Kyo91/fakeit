@@ -18,13 +18,45 @@
                    :name "baz"
                    :value {:type :int}}}})
 
-(deftest a-test
+(def int-schema
+  {:type :record
+   :name "int"
+   :value {:type :int}})
+
+(def float-schema
+  {:type :record
+   :name "float"
+   :value {:type :float}})
+
+(def string-schema
+  {:type :record
+   :name "string"
+   :value {:type :string}})
+
+
+(defmacro is-fixed-rnd
+  ([form] `(binding [*rnd* (Random. 10)]
+            (is ~form)))
+  ([form msg] `(binding [*rnd* (Random. 10)]
+                    (is ~form ~msg))))
+
+(deftest basic-test
   (testing "Ensure simple-schema and nested-schema work"
     (let [simple {"foo" [6 59 59 26 17 45 54 86]}
           nested {"bar" [{"baz" 6} {"baz" 59} {"baz" 59} {"baz" 26} {"baz" 17} {"baz" 45} {"baz" 54} {"baz" 86}]}]
-      (binding [*rnd* (Random. 10)] 
-        (is (= (walk-tree generator simple-schema) simple)
-            "Failed to generate simple schema."))
-      (binding [*rnd* (Random. 10)] 
-        (is (= (walk-tree generator nested-schema) nested)
-            "Falied to generate nested schema.")))))
+      (is-fixed-rnd (= (walk-tree generator simple-schema) simple)
+          "Failed to generate simple schema.")
+      (is-fixed-rnd (= (walk-tree generator nested-schema) nested)
+          "Falied to generate nested schema."))))
+
+(deftest type-tests
+  (testing "Ensure generators for all types work as expected"
+    (let [int {"int" 88}
+          float {"float" 0.7304302453994751}
+          string {"string" "8%7mCqc;w I\"w{l"}]
+      (is-fixed-rnd (= (walk-tree generator int-schema) int)
+                  "Failed to generate int schema.")
+      (is-fixed-rnd (= (walk-tree generator float-schema) float)
+                  "Failed to generate float schema.")
+      (is-fixed-rnd (= (walk-tree generator string-schema) string)
+                  "Failed to generate string schema."))))

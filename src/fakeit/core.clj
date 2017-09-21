@@ -12,10 +12,14 @@
 (defn generate-array [f]
   (vec (repeatedly (clamp (gen/int) 10) f)))
 
-;; Add more keys as needed. For now, generation is just off of type.
-(defn generator [{:keys [type]}]
+;; Add more keys as needed.
+;; TODO change this to instead be a multimethod based on :type
+;; (defmulti generate :type ...)
+(defn generator [{:keys [type min max] :or {min 0 max 100}}]
   (case type
-    :int (clamp (gen/int) 100)))
+    :int (clamp (gen/int) max :min min)
+    :float (clamp (gen/float) max :min min)
+    :string (gen/string)))
 
 (defn walk-tree [f {:keys [type value name] :as leaf}]
   (case type
