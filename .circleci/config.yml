@@ -40,4 +40,5 @@ jobs:
         
       # run tests!
       - run: lein with-profile qa cloverage --coveralls -o target/coverage
+      - run: cat target/coverage/coveralls.json
       - run: curl -F 'json_file=@target/coverage/coveralls.json' 'https://coveralls.io/api/v1/jobs'
