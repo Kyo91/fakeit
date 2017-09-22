@@ -2,7 +2,11 @@
   (:gen-class)
   (:require [clojure.walk :as walk]
             [com.rpl.specter :refer :all ]
-            [clojure.data.generators :as gen]))
+            [clojure.data.generators :as gen])
+  (:import  [java.util.Date]))
+
+;; Important TODO. Come up with a syntax for multi-value records.
+;; Maybe record :value [{:type foo...} {:type bar...}]
 
 (defn clamp [n max & {:keys [min] :or {min 0}}]
   (let [modspace (- max min)]
@@ -12,14 +16,26 @@
 (defn generate-array [f]
   (vec (repeatedly (clamp (gen/int) 10) f)))
 
+(defn date-generator [{:keys [startDate endDate meanTime]
+                       :or {endDate (java.util.Date.)}}]
+  (let [generated (if (nil? meanTime) (gen/date) (gen/date meanTime))
+        generated-time (.getTime generated)
+        endTime (.getTime endDate)]
+    (java.util.Date. (clamp generated-time endTime
+                            :min (if (nil? startDate)
+                                   0
+                                   (.getTime startDate)
+                                   )))))
+
 ;; Add more keys as needed.
 ;; TODO change this to instead be a multimethod based on :type
 ;; (defmulti generate :type ...)
-(defn generator [{:keys [type min max] :or {min 0 max 100}}]
+(defn generator [{:keys [type min max] :or {min 0 max 100} :as leaf}]
   (case type
     :int (clamp (gen/int) max :min min)
     :float (clamp (gen/float) max :min min)
-    :string (gen/string)))
+    :string (gen/string)
+    :date (date-generator leaf)))
 
 (defn walk-tree [f {:keys [type value name] :as leaf}]
   (case type

@@ -33,6 +33,11 @@
    :name "string"
    :value {:type :string}})
 
+(def date-schema
+  {:type :record
+   :name "date"
+   :value {:type :date}})
+
 (defmacro is-fixed-rnd
   "Helper macro to fix RNG generator before each assertion."
   ([form] `(binding [*rnd* (Random. 10)]
@@ -63,10 +68,13 @@
   (testing "Ensure generators for all types work as expected"
     (let [int {"int" 88}
           float {"float" 0.7304302453994751}
-          string {"string" "8%7mCqc;w I\"w{l"}]
+          string {"string" "8%7mCqc;w I\"w{l"}
+          date {"date" #inst "1981-11-14T15:35:16.326-00:00"}]
       (is-fixed-rnd (= (walk-tree generator int-schema) int)
                   "Failed to generate int schema.")
       (is-fixed-rnd (= (walk-tree generator float-schema) float)
                   "Failed to generate float schema.")
       (is-fixed-rnd (= (walk-tree generator string-schema) string)
-                  "Failed to generate string schema."))))
+                    "Failed to generate string schema.")
+      (is-fixed-rnd (= (walk-tree generator date-schema) date)
+                    "Failed to generate date schema."))))
