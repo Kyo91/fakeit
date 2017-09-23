@@ -4,37 +4,48 @@
             [clojure.data.generators :refer [*rnd*]])
   (:import java.util.Random))
 
-(def simple-schema
-  {:type :record
+(def simple-field
+  {:type :field
    :name "foo"
    :value {:type :array
            :value {:type :int}}})
 
 (def nested-schema
   {:type :record
-   :name "bar"
-   :value {:type :array
-           :value {:type :record
-                   :name "baz"
-                   :value {:type :int}}}})
+   :value [{:type :field
+           :name "bar"
+           :value {:type :array
+                   :value {:type :field
+                           :name "baz"
+                           :value {:type :int}}}}]})
+
+(def two-fields
+  {:type :record
+   :value [{:type :field
+            :name "field1"
+            :value {:type :int}}
+           {:type :field
+            :name "field2"
+            :value {:type :array
+                    :value {:type :date}}}]})
 
 (def int-schema
-  {:type :record
+  {:type :field
    :name "int"
    :value {:type :int}})
 
 (def float-schema
-  {:type :record
+  {:type :field
    :name "float"
    :value {:type :float}})
 
 (def string-schema
-  {:type :record
+  {:type :field
    :name "string"
    :value {:type :string}})
 
 (def date-schema
-  {:type :record
+  {:type :field
    :name "date"
    :value {:type :date}})
 
@@ -53,16 +64,17 @@
       100 10 30
       12.3333 5 8)))
 
-
-
 (deftest basic-test
-  (testing "Ensure simple-schema and nested-schema work"
+  (testing "Ensure general schemas work"
     (let [simple {"foo" [6 59 59 26 17 45 54 86]}
-          nested {"bar" [{"baz" 6} {"baz" 59} {"baz" 59} {"baz" 26} {"baz" 17} {"baz" 45} {"baz" 54} {"baz" 86}]}]
-      (is-fixed-rnd (= (walk-tree generator simple-schema) simple)
+          nested {"bar" [{"baz" 6} {"baz" 59} {"baz" 59} {"baz" 26} {"baz" 17} {"baz" 45} {"baz" 54} {"baz" 86}]}
+          double {"field1" 88, "field2" [#inst "1976-10-28T17:19:44.572-00:00" #inst "1973-04-15T21:37:08.910-00:00" #inst "1977-07-22T04:08:54.565-00:00" #inst "2007-07-06T08:24:06.243-00:00" #inst "1975-11-12T12:18:44.626-00:00" #inst "1982-09-05T15:29:16.014-00:00"]}]
+      (is-fixed-rnd (= (walk-tree generator simple-field) simple)
           "Failed to generate simple schema.")
       (is-fixed-rnd (= (walk-tree generator nested-schema) nested)
-          "Falied to generate nested schema."))))
+                    "Falied to generate nested schema.")
+      (is-fixed-rnd (= (walk-tree generator two-fields) double)
+                    "Falied to generate nested schema."))))
 
 (deftest type-tests
   (testing "Ensure generators for all types work as expected"

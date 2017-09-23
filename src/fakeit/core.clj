@@ -17,7 +17,7 @@
   (vec (repeatedly (clamp (gen/int) 10) f)))
 
 (defn date-generator [{:keys [startDate endDate meanTime]
-                       :or {endDate (java.util.Date.)}}]
+                       :or {endDate #inst "2020-01-01T01:00:00.000-00:00"}}]
   (let [generated (if (nil? meanTime) (gen/date) (gen/date meanTime))
         generated-time (.getTime generated)
         endTime (.getTime endDate)]
@@ -39,7 +39,8 @@
 
 (defn walk-tree [f {:keys [type value name] :as leaf}]
   (case type
-    :record {name (walk-tree f value)}
+    :record (into {} (mapv #(walk-tree f %) value))
+    :field {name (walk-tree f value)}
     :array (generate-array #(walk-tree f value))
     (f leaf)))
 
