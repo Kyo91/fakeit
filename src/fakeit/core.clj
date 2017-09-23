@@ -8,16 +8,16 @@
 ;; Important TODO. Come up with a syntax for multi-value records.
 ;; Maybe record :value [{:type foo...} {:type bar...}]
 
-(defn clamp [n max & {:keys [min] :or {min 0}}]
+(defn- clamp [n max & {:keys [min] :or {min 0}}]
   (let [modspace (- max min)]
     (+ min
        (mod n modspace))))
 
-(defn generate-array [f]
+(defn- generate-array [f]
   (vec (repeatedly (clamp (gen/int) 10) f)))
 
-(defn date-generator [{:keys [startDate endDate meanTime]
-                       :or {endDate #inst "2020-01-01T01:00:00.000-00:00"}}]
+(defn- date-generator [{:keys [startDate endDate meanTime]
+                        :or {endDate #inst "2020-01-01T01:00:00.000-00:00"}}]
   (let [generated (if (nil? meanTime) (gen/date) (gen/date meanTime))
         generated-time (.getTime generated)
         endTime (.getTime endDate)]
