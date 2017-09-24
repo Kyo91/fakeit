@@ -8,7 +8,7 @@
 ;; Important TODO. Come up with a syntax for multi-value records.
 ;; Maybe record :value [{:type foo...} {:type bar...}]
 
-(defn clamp [n max & {:keys [min] :or {min 0}}]
+(defn- clamp [n max & {:keys [min] :or {min 0}}]
   (let [modspace (- max min)]
     (+ min
        (mod n modspace))))

@@ -58,7 +58,7 @@
 
 (deftest clamp-tests
   (testing "Make sure custom clamp function works."
-    (are [x floor ceiling] (<= floor (clamp x ceiling :min floor) ceiling)
+    (are [x floor ceiling] (<= floor (#'fakeit.core/clamp x ceiling :min floor) ceiling)
       10 20 30
       20 10 30
       100 10 30
