@@ -32,17 +32,20 @@
 ;; (defmulti generate :type ...)
 (defn generator [{:keys [type min max] :or {min 0 max 100} :as leaf}]
   (case type
-    :int (clamp (gen/int) max :min min)
-    :float (clamp (gen/float) max :min min)
-    :string (gen/string)
-    :date (date-generator leaf)))
+    "int" (clamp (gen/int) max :min min)
+    "float" (clamp (gen/float) max :min min)
+    "string" (gen/string)
+    "date" (date-generator leaf)))
 
 (defn walk-tree [f {:keys [type value name] :as leaf}]
   (case type
-    :record (into {} (mapv #(walk-tree f %) value))
-    :field {name (walk-tree f value)}
-    :array (generate-array #(walk-tree f value))
+    "record" (into {} (mapv #(walk-tree f %) value))
+    "field" {name (walk-tree f value)}
+    "array" (generate-array #(walk-tree f value))
     (f leaf)))
+
+(defn generate-schema [schema]
+  (walk-tree generator schema))
 
 (defn -main
   "I don't do a whole lot ... yet."

@@ -5,49 +5,49 @@
   (:import java.util.Random))
 
 (def simple-field
-  {:type :field
+  {:type "field"
    :name "foo"
-   :value {:type :array
-           :value {:type :int}}})
+   :value {:type "array"
+           :value {:type "int"}}})
 
 (def nested-schema
-  {:type :record
-   :value [{:type :field
-           :name "bar"
-           :value {:type :array
-                   :value {:type :field
-                           :name "baz"
-                           :value {:type :int}}}}]})
+  {:type "record"
+   :value [{:type "field"
+            :name "bar"
+            :value {:type "array"
+                    :value {:type "field"
+                            :name "baz"
+                            :value {:type "int"}}}}]})
 
 (def two-fields
-  {:type :record
-   :value [{:type :field
+  {:type "record"
+   :value [{:type "field"
             :name "field1"
-            :value {:type :int}}
-           {:type :field
+            :value {:type "int"}}
+           {:type "field"
             :name "field2"
-            :value {:type :array
-                    :value {:type :date}}}]})
+            :value {:type "array"
+                    :value {:type "date"}}}]})
 
 (def int-schema
-  {:type :field
+  {:type "field"
    :name "int"
-   :value {:type :int}})
+   :value {:type "int"}})
 
 (def float-schema
-  {:type :field
+  {:type "field"
    :name "float"
-   :value {:type :float}})
+   :value {:type "float"}})
 
 (def string-schema
-  {:type :field
+  {:type "field"
    :name "string"
-   :value {:type :string}})
+   :value {:type "string"}})
 
 (def date-schema
-  {:type :field
+  {:type "field"
    :name "date"
-   :value {:type :date}})
+   :value {:type "date"}})
 
 (defmacro is-fixed-rnd
   "Helper macro to fix RNG generator before each assertion."
